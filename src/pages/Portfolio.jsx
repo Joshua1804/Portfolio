@@ -874,86 +874,197 @@ const Interests = () => {
 // ============================================================================
 const Contact = () => {
     const [sectionRef, sectionVisible] = useScrollReveal();
+    const [formFocus, setFormFocus] = useState(null);
+
+    const contactMethods = [
+        {
+            icon: <Mail className="w-6 h-6" />,
+            label: "Email",
+            value: "hello@joshua.dev",
+            href: "mailto:hello@joshua.dev",
+            color: "from-blue-500 to-cyan-500"
+        },
+        {
+            icon: <Linkedin className="w-6 h-6" />,
+            label: "LinkedIn",
+            value: "Connect with me",
+            href: "https://linkedin.com",
+            color: "from-blue-600 to-blue-400"
+        },
+        {
+            icon: <Github className="w-6 h-6" />,
+            label: "GitHub",
+            value: "See my work",
+            href: "https://github.com",
+            color: "from-gray-600 to-gray-400"
+        }
+    ];
 
     return (
-        <section id="contact" className="py-20 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="contact" className="py-24 relative overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            </div>
+
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+                {/* Header */}
                 <div
                     ref={sectionRef}
-                    className={`glass rounded-3xl p-8 md:p-12 lg:p-16 overflow-hidden relative scroll-reveal-scale ${sectionVisible ? 'visible' : ''}`}
+                    className={`text-center mb-16 scroll-reveal ${sectionVisible ? 'visible' : ''}`}
                 >
+                    <span className="inline-block px-4 py-1.5 mb-4 text-sm font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 rounded-full">
+                        Get In Touch
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                        <span className="text-white">Let's Create </span>
+                        <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+                            Something Amazing
+                        </span>
+                    </h2>
+                    <p className="text-gray-400 max-w-xl mx-auto text-lg">
+                        Have a project in mind? I'd love to hear about it. Drop me a message and let's bring your ideas to life.
+                    </p>
+                </div>
 
-
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div className={`scroll-reveal-left ${sectionVisible ? 'visible' : ''} stagger-1`}>
-                            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-                                Let's Work Together
-                            </h2>
-                            <p className="text-gray-300 text-lg mb-8">
-                                I'm currently opening to new opportunities and collaborations.
-                                Whether you have a question or just want to say hi, feel free to reach out!
-                            </p>
-
-                            <div className="space-y-4">
-                                <a href="mailto:hello@joshua.dev" className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors group">
-                                    <div className="bg-gray-900/60 p-3 rounded-lg group-hover:bg-blue-500/20 transition-colors">
-                                        <Mail className="w-6 h-6 text-blue-400" />
-                                    </div>
-                                    <span className="text-lg">hello@joshua.dev</span>
-                                </a>
-
-                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors group">
-                                    <div className="bg-gray-900/60 p-3 rounded-lg group-hover:bg-blue-500/20 transition-colors">
-                                        <Linkedin className="w-6 h-6 text-blue-400" />
-                                    </div>
-                                    <span className="text-lg">Connect on LinkedIn</span>
-                                </a>
-
-                                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-gray-300 hover:text-white transition-colors group">
-                                    <div className="bg-gray-900/60 p-3 rounded-lg group-hover:bg-blue-500/20 transition-colors">
-                                        <Github className="w-6 h-6 text-blue-400" />
-                                    </div>
-                                    <span className="text-lg">Follow on GitHub</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <form className={`space-y-4 scroll-reveal-right ${sectionVisible ? 'visible' : ''} stagger-2`} onSubmit={(e) => e.preventDefault()}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-400">Name</label>
-                                    <input
-                                        type="text"
-                                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
-                                        placeholder="John Doe"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-400">Email</label>
-                                    <input
-                                        type="email"
-                                        className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
-                                        placeholder="john@example.com"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-400">Message</label>
-                                <textarea
-                                    rows="4"
-                                    className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all resize-none"
-                                    placeholder="Your message here..."
-                                ></textarea>
-                            </div>
-
-                            <button
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-medium py-3 rounded-lg transition-all transform hover:scale-[1.02] shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+                    {/* Contact Cards */}
+                    <div className={`lg:col-span-2 space-y-4 scroll-reveal ${sectionVisible ? 'visible' : ''} stagger-1`}>
+                        {contactMethods.map((method, index) => (
+                            <a
+                                key={index}
+                                href={method.href}
+                                target={method.href.startsWith('http') ? '_blank' : undefined}
+                                rel={method.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                className="group block p-5 rounded-2xl bg-gray-900/40 border border-white/5 hover:border-white/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl relative overflow-hidden"
                             >
-                                <MessageSquare size={20} />
-                                Send Message
-                            </button>
+                                {/* Gradient hover background */}
+                                <div className={`absolute inset-0 bg-gradient-to-r ${method.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+
+                                <div className="relative flex items-center gap-4">
+                                    <div className={`p-3 rounded-xl bg-gradient-to-r ${method.color} text-white shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                                        {method.icon}
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-sm text-gray-500 mb-0.5">{method.label}</p>
+                                        <p className="text-white font-medium group-hover:text-blue-400 transition-colors">{method.value}</p>
+                                    </div>
+                                    <div className="text-gray-600 group-hover:text-white group-hover:translate-x-1 transition-all duration-300">
+                                        <ExternalLink size={18} />
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+
+                        {/* Quick response badge */}
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+                            <div className="relative">
+                                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                                <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping" />
+                            </div>
+                            <p className="text-green-400 text-sm font-medium">Usually responds within 24 hours</p>
+                        </div>
+                    </div>
+
+                    {/* Contact Form */}
+                    <div className={`lg:col-span-3 scroll-reveal ${sectionVisible ? 'visible' : ''} stagger-2`}>
+                        <form
+                            className="p-6 md:p-8 rounded-3xl bg-gray-900/40 border border-white/5 backdrop-blur-sm relative overflow-hidden"
+                            onSubmit={(e) => e.preventDefault()}
+                        >
+                            {/* Form decorative element */}
+                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-2xl" />
+
+                            <div className="relative space-y-5">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            Name
+                                            <span className="text-red-400">*</span>
+                                        </label>
+                                        <div className={`relative transition-all duration-300 ${formFocus === 'name' ? 'transform scale-[1.02]' : ''}`}>
+                                            <input
+                                                type="text"
+                                                className="w-full bg-black/30 border-2 border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-black/50 transition-all duration-300"
+                                                placeholder="Your name"
+                                                onFocus={() => setFormFocus('name')}
+                                                onBlur={() => setFormFocus(null)}
+                                            />
+                                            {formFocus === 'name' && (
+                                                <div className="absolute inset-0 -z-10 bg-blue-500/20 rounded-xl blur-xl" />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                            Email
+                                            <span className="text-red-400">*</span>
+                                        </label>
+                                        <div className={`relative transition-all duration-300 ${formFocus === 'email' ? 'transform scale-[1.02]' : ''}`}>
+                                            <input
+                                                type="email"
+                                                className="w-full bg-black/30 border-2 border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:bg-black/50 transition-all duration-300"
+                                                placeholder="your@email.com"
+                                                onFocus={() => setFormFocus('email')}
+                                                onBlur={() => setFormFocus(null)}
+                                            />
+                                            {formFocus === 'email' && (
+                                                <div className="absolute inset-0 -z-10 bg-blue-500/20 rounded-xl blur-xl" />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        Subject
+                                    </label>
+                                    <div className={`relative transition-all duration-300 ${formFocus === 'subject' ? 'transform scale-[1.02]' : ''}`}>
+                                        <input
+                                            type="text"
+                                            className="w-full bg-black/30 border-2 border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:bg-black/50 transition-all duration-300"
+                                            placeholder="What's this about?"
+                                            onFocus={() => setFormFocus('subject')}
+                                            onBlur={() => setFormFocus(null)}
+                                        />
+                                        {formFocus === 'subject' && (
+                                            <div className="absolute inset-0 -z-10 bg-purple-500/20 rounded-xl blur-xl" />
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                                        Message
+                                        <span className="text-red-400">*</span>
+                                    </label>
+                                    <div className={`relative transition-all duration-300 ${formFocus === 'message' ? 'transform scale-[1.02]' : ''}`}>
+                                        <textarea
+                                            rows="5"
+                                            className="w-full bg-black/30 border-2 border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 focus:bg-black/50 transition-all duration-300 resize-none"
+                                            placeholder="Tell me about your project, idea, or just say hello..."
+                                            onFocus={() => setFormFocus('message')}
+                                            onBlur={() => setFormFocus(null)}
+                                        />
+                                        {formFocus === 'message' && (
+                                            <div className="absolute inset-0 -z-10 bg-pink-500/20 rounded-xl blur-xl" />
+                                        )}
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full relative group overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/25 hover:-translate-y-0.5"
+                                >
+                                    {/* Button shine effect */}
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                                    <span className="relative flex items-center justify-center gap-2">
+                                        <MessageSquare size={20} />
+                                        Send Message
+                                    </span>
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
