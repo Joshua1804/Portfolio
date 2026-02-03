@@ -7,6 +7,10 @@ import {
 import GooeyNav from '../components/GooeyNav';
 import BlurText from '../components/BlurText';
 import ProfileCard from '../components/ProfileCard';
+import SideElements from '../components/SideElements';
+import TiltedCard from '../components/TiltedCard';
+import Particles from '../components/Particles';
+import StarBorder from '../components/StarBorder';
 
 // ============================================================================
 // SCROLL REVEAL HOOK
@@ -49,6 +53,16 @@ const useScrollReveal = (options = {}) => {
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [activeSection, setActiveSection] = useState(0);
+
+    const navLinks = [
+        { label: 'About', href: '#about' },
+        { label: 'Education', href: '#education' },
+        { label: 'Certificates', href: '#certificates' },
+        { label: 'Skills', href: '#skills' },
+        { label: 'Projects', href: '#projects' },
+        { label: 'Contact', href: '#contact' }
+    ];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -58,15 +72,36 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const navLinks = [
-        { label: 'About', href: '#about' },
-        { label: 'Education', href: '#education' },
-        { label: 'Certificates', href: '#certificates' },
-        { label: 'Skills', href: '#skills' },
-        { label: 'Projects', href: '#projects' },
-        { label: 'Interests', href: '#interests' },
-        { label: 'Contact', href: '#contact' },
-    ];
+    // Scroll spy using IntersectionObserver
+    useEffect(() => {
+        const sectionIds = navLinks.map(link => link.href.replace('#', ''));
+        const observers = [];
+
+        sectionIds.forEach((id, index) => {
+            const element = document.getElementById(id);
+            if (element) {
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                setActiveSection(index);
+                            }
+                        });
+                    },
+                    {
+                        rootMargin: '-20% 0px -60% 0px',
+                        threshold: 0
+                    }
+                );
+                observer.observe(element);
+                observers.push(observer);
+            }
+        });
+
+        return () => {
+            observers.forEach(observer => observer.disconnect());
+        };
+    }, []);
 
     return (
         <nav className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${scrolled ? 'top-4' : 'top-6'}`}>
@@ -86,18 +121,11 @@ const Navbar = () => {
                     particleDistances={[90, 10]}
                     particleR={100}
                     initialActiveIndex={0}
+                    activeIndex={activeSection}
                     animationTime={600}
                     timeVariance={300}
                     colors={[1, 2, 3, 1, 2, 3, 1, 4]}
                 />
-
-                {/* Email Button */}
-                <a
-                    href="mailto:hello@joshua.dev"
-                    className="ml-4 px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-200 transition-colors duration-300"
-                >
-                    hello@joshua.dev
-                </a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -124,19 +152,14 @@ const Navbar = () => {
                                     key={link.label}
                                     href={link.href}
                                     onClick={() => setIsOpen(false)}
-                                    className="block w-full text-left px-6 py-3 text-sm font-medium text-gray-400 hover:bg-gray-900 hover:text-white transition-colors"
+                                    className={`block w-full text-left px-6 py-3 text-sm font-medium transition-colors ${activeSection === index
+                                        ? 'text-white bg-gray-900'
+                                        : 'text-gray-400 hover:bg-gray-900 hover:text-white'
+                                        }`}
                                 >
                                     {link.label}
                                 </a>
                             ))}
-                            <div className="border-t border-white/5 mt-2 pt-2 px-4 pb-3">
-                                <a
-                                    href="mailto:hello@joshua.dev"
-                                    className="block w-full text-center px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-full hover:bg-gray-200 transition-colors"
-                                >
-                                    hello@joshua.dev
-                                </a>
-                            </div>
                         </div>
                     </div>
                 )}
@@ -144,6 +167,7 @@ const Navbar = () => {
         </nav>
     );
 };
+
 
 
 // ============================================================================
@@ -206,26 +230,37 @@ const Hero = () => {
                         />
 
                         <div className="flex flex-col sm:flex-row gap-4 animate-slide-up delay-300">
-                            <a
+                            <StarBorder
+                                as="a"
                                 href="#projects"
-                                className="px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-medium transition-all hover:scale-105 shadow-lg shadow-blue-500/25"
+                                color="#3b82f6"
+                                speed="5s"
                             >
                                 View My Work
-                            </a>
-                            <a
+                            </StarBorder>
+                            <StarBorder
+                                as="a"
                                 href="#contact"
-                                className="px-8 py-3 rounded-full bg-gray-900/60 hover:bg-gray-800/60 border border-white/10 text-white font-medium transition-all hover:scale-105 backdrop-blur-sm"
+                                color="#8b5cf6"
+                                speed="5s"
                             >
                                 Get in Touch
-                            </a>
+                            </StarBorder>
+                            <StarBorder
+                                as="a"
+                                href="/resume.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                color="#22c55e"
+                                speed="5s"
+                            >
+                                View Resume
+                            </StarBorder>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Decorative background elements */}
-            <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10 animate-pulse delay-700"></div>
 
             <a
                 href="#skills"
@@ -242,7 +277,11 @@ const Hero = () => {
 // ============================================================================
 const Education = () => {
     const [headerRef, headerVisible] = useScrollReveal();
-    const [contentRef, contentVisible] = useScrollReveal();
+    const timelineRef = useRef(null);
+    const [lineHeight, setLineHeight] = useState(0);
+    const [visibleCards, setVisibleCards] = useState([]);
+    const animationFrameRef = useRef(null);
+    const currentLineHeight = useRef(0);
 
     const educationData = [
         {
@@ -251,7 +290,8 @@ const Education = () => {
             location: "San Francisco, CA",
             period: "2023 - Present",
             description: "Focusing on Software Engineering and Artificial Intelligence. Active member of the CS Club and Hackathon organizer.",
-            courses: ["Data Structures", "Algorithms", "Web Development", "Database Systems"]
+            courses: ["Data Structures", "Algorithms", "Web Development", "Database Systems"],
+            current: true
         },
         {
             degree: "High School Diploma",
@@ -259,9 +299,73 @@ const Education = () => {
             location: "San Jose, CA",
             period: "2019 - 2023",
             description: "Graduated with Honors. Lead Developer for the school robotics team.",
-            courses: ["AP Computer Science", "Calculus", "Physics"]
+            courses: ["AP Computer Science", "Calculus", "Physics"],
+            current: false
         }
     ];
+
+    // Smooth scroll-based timeline animation
+    useEffect(() => {
+        let targetHeight = 0;
+
+        const smoothAnimate = () => {
+            // Smooth interpolation (easing)
+            const diff = targetHeight - currentLineHeight.current;
+            currentLineHeight.current += diff * 0.08; // Smooth easing factor
+
+            setLineHeight(currentLineHeight.current);
+
+            // Update visible cards based on timeline progress
+            const totalItems = educationData.length;
+            const progressPerItem = 100 / totalItems;
+            const newVisibleCards = [];
+
+            for (let i = 0; i < totalItems; i++) {
+                // Card becomes visible when timeline reaches its position (with some offset)
+                const cardThreshold = (i * progressPerItem) + (progressPerItem * 0.3);
+                if (currentLineHeight.current >= cardThreshold) {
+                    newVisibleCards.push(i);
+                }
+            }
+
+            setVisibleCards(prev => {
+                if (prev.length !== newVisibleCards.length) {
+                    return newVisibleCards;
+                }
+                return prev;
+            });
+
+            animationFrameRef.current = requestAnimationFrame(smoothAnimate);
+        };
+
+        const handleScroll = () => {
+            if (!timelineRef.current) return;
+
+            const timeline = timelineRef.current;
+            const rect = timeline.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            const timelineTop = rect.top;
+            const timelineHeight = rect.height;
+
+            if (timelineTop < windowHeight && rect.bottom > 0) {
+                const scrolledIntoView = windowHeight - timelineTop;
+                const progress = Math.min(Math.max(scrolledIntoView / (timelineHeight + windowHeight * 0.2), 0), 1);
+                targetHeight = progress * 100;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        animationFrameRef.current = requestAnimationFrame(smoothAnimate);
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            if (animationFrameRef.current) {
+                cancelAnimationFrame(animationFrameRef.current);
+            }
+        };
+    }, []);
 
     return (
         <section id="education" className="py-20 relative">
@@ -278,66 +382,146 @@ const Education = () => {
                     </p>
                 </div>
 
-                <div ref={contentRef} className="max-w-3xl mx-auto relative">
-                    <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500/50 to-purple-500/50 hidden md:block"></div>
+                <div className="max-w-4xl mx-auto relative">
+                    {/* Timeline Container */}
+                    <div
+                        ref={timelineRef}
+                        className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 md:-translate-x-1/2"
+                    >
+                        {/* Background line (unfilled) */}
+                        <div className="absolute inset-0 bg-gray-800/30 rounded-full" />
 
-                    <div className="space-y-12">
-                        {educationData.map((item, index) => (
+                        {/* Animated fill line */}
+                        <div
+                            className="absolute top-0 left-0 w-full rounded-full bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500"
+                            style={{
+                                height: `${lineHeight}%`,
+                                boxShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(139, 92, 246, 0.4)',
+                                transition: 'box-shadow 0.3s ease'
+                            }}
+                        />
+
+                        {/* Glowing tip */}
+                        {lineHeight > 0 && lineHeight < 100 && (
                             <div
-                                key={index}
-                                className={`relative flex flex-col md:flex-row gap-8 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''} scroll-reveal ${contentVisible ? 'visible' : ''} stagger-${index + 1}`}
-                            >
-                                <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-blue-500 rounded-full border-4 border-gray-900 transform -translate-x-1/2 mt-1.5 z-10 hidden md:block"></div>
+                                className="absolute left-1/2 w-4 h-4 -translate-x-1/2 rounded-full bg-white"
+                                style={{
+                                    top: `${lineHeight}%`,
+                                    transform: 'translate(-50%, -50%)',
+                                    boxShadow: '0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(59, 130, 246, 0.8), 0 0 60px rgba(139, 92, 246, 0.6)'
+                                }}
+                            />
+                        )}
+                    </div>
 
-                                <div className="w-full md:w-[calc(50%-2rem)]">
-                                    <div className="glass p-6 rounded-xl hover:bg-gray-900/60 transition-all duration-300 transform hover:-translate-y-1 relative group">
-                                        <div className="absolute -left-3 top-6 w-6 h-0.5 bg-blue-500/50 hidden md:block"></div>
+                    <div className="space-y-16">
+                        {educationData.map((item, index) => {
+                            const isVisible = visibleCards.includes(index);
 
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                                                <GraduationCap size={24} />
-                                            </div>
-                                            <div>
-                                                <h3 className="text-xl font-bold text-white">{item.degree}</h3>
-                                                <p className="text-blue-400 font-medium">{item.school}</p>
-                                            </div>
-                                        </div>
+                            return (
+                                <div
+                                    key={index}
+                                    className={`relative flex flex-col md:flex-row gap-6 md:gap-12 ${index % 2 === 0 ? '' : 'md:flex-row-reverse'}`}
+                                >
+                                    {/* Timeline Dot with Animation */}
+                                    <div
+                                        className={`absolute left-4 md:left-1/2 w-6 h-6 rounded-full transform -translate-x-1/2 z-10 transition-all duration-700 ease-out ${isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`}
+                                        style={{ top: '2rem' }}
+                                    >
+                                        {/* Outer ring with pulse */}
+                                        <div className={`absolute inset-0 rounded-full ${item.current ? 'bg-blue-500' : 'bg-purple-500'} ${isVisible ? 'animate-ping' : ''} opacity-30`} />
+                                        {/* Inner dot */}
+                                        <div className={`absolute inset-1 rounded-full ${item.current ? 'bg-blue-500' : 'bg-purple-500'} border-4 border-gray-950`} />
+                                        {/* Glow effect */}
+                                        <div className={`absolute inset-0 rounded-full ${item.current ? 'bg-blue-500' : 'bg-purple-500'} blur-md opacity-60`} />
+                                    </div>
 
-                                        <div className="flex flex-wrap gap-4 text-sm text-gray-400 mb-4">
-                                            <div className="flex items-center gap-1">
-                                                <Calendar size={14} />
-                                                <span>{item.period}</span>
-                                            </div>
-                                            <div className="flex items-center gap-1">
-                                                <MapPin size={14} />
-                                                <span>{item.location}</span>
-                                            </div>
-                                        </div>
+                                    {/* Content Card */}
+                                    <div
+                                        className={`w-full md:w-[calc(50%-3rem)] ml-12 md:ml-0 ${index % 2 === 0 ? 'md:pr-0' : 'md:pl-0'} transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                                        style={{ transitionDelay: isVisible ? '150ms' : '0ms' }}
+                                    >
+                                        <div className="glass p-6 rounded-2xl hover:bg-gray-900/70 transition-all duration-500 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-500/10 group relative overflow-hidden">
+                                            {/* Gradient hover effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                                        <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-                                            {item.description}
-                                        </p>
-
-                                        <div>
-                                            <h4 className="text-sm font-semibold text-gray-400 mb-2">Key Coursework:</h4>
-                                            <div className="flex flex-wrap gap-2">
-                                                {item.courses.map((course, i) => (
-                                                    <span key={i} className="px-2 py-1 text-xs rounded bg-gray-900/60 border border-white/5 text-gray-300">
-                                                        {course}
+                                            {/* Current badge */}
+                                            {item.current && (
+                                                <div className="absolute top-4 right-4">
+                                                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 animate-pulse">
+                                                        Current
                                                     </span>
-                                                ))}
+                                                </div>
+                                            )}
+
+                                            {/* Header */}
+                                            <div className="flex items-start gap-4 mb-5 relative">
+                                                <div className={`p-3 rounded-xl ${item.current ? 'bg-blue-500/10 text-blue-400' : 'bg-purple-500/10 text-purple-400'} group-hover:scale-110 transition-transform duration-300`}>
+                                                    <GraduationCap size={28} />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-blue-400 transition-colors duration-300">{item.degree}</h3>
+                                                    <p className={`${item.current ? 'text-blue-400' : 'text-purple-400'} font-medium`}>{item.school}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Meta info */}
+                                            <div className="flex flex-wrap gap-4 text-sm text-gray-400 mb-5">
+                                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900/50 border border-white/5">
+                                                    <Calendar size={14} className={item.current ? 'text-blue-400' : 'text-purple-400'} />
+                                                    <span>{item.period}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900/50 border border-white/5">
+                                                    <MapPin size={14} className={item.current ? 'text-blue-400' : 'text-purple-400'} />
+                                                    <span>{item.location}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            <p className="text-gray-300 mb-5 text-sm leading-relaxed relative">
+                                                {item.description}
+                                            </p>
+
+                                            {/* Courses */}
+                                            <div className="relative">
+                                                <h4 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${item.current ? 'bg-blue-400' : 'bg-purple-400'}`} />
+                                                    Key Coursework
+                                                </h4>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {item.courses.map((course, i) => (
+                                                        <span
+                                                            key={i}
+                                                            className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all duration-300 hover:scale-105 cursor-default ${item.current
+                                                                ? 'bg-blue-500/10 border-blue-500/20 text-blue-300 hover:bg-blue-500/20'
+                                                                : 'bg-purple-500/10 border-purple-500/20 text-purple-300 hover:bg-purple-500/20'
+                                                                }`}
+                                                        >
+                                                            {course}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>
+
+            {/* CSS for timeline animation */}
+            <style>{`
+                @keyframes timeline-glow {
+                    0%, 100% { background-position: 0% 0%; }
+                    50% { background-position: 0% 100%; }
+                }
+            `}</style>
         </section>
     );
 };
+
 
 // ============================================================================
 // CERTIFICATES SECTION
@@ -538,7 +722,7 @@ const Projects = () => {
     ];
 
     return (
-        <section id="projects" className="py-20 bg-black/20">
+        <section id="projects" className="py-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     ref={headerRef}
@@ -556,42 +740,60 @@ const Projects = () => {
                     {projects.map((project, index) => (
                         <div
                             key={index}
-                            className={`glass rounded-xl overflow-hidden hover:scale-[1.02] transition-all duration-300 group scroll-reveal-rotate ${gridVisible ? 'visible' : ''} stagger-${index + 1}`}
+                            className={`scroll-reveal-rotate ${gridVisible ? 'visible' : ''} stagger-${index + 1}`}
                         >
-                            <div className="relative h-48 overflow-hidden">
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                                    <div className="flex gap-4">
-                                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors">
-                                            <Github size={20} />
-                                        </a>
-                                        <a href={project.demo} target="_blank" rel="noopener noreferrer" className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors">
-                                            <ExternalLink size={20} />
-                                        </a>
+                            <TiltedCard
+                                imageSrc={project.image}
+                                altText={project.title}
+                                captionText={project.title}
+                                containerHeight="380px"
+                                containerWidth="100%"
+                                imageHeight="280px"
+                                imageWidth="100%"
+                                scaleOnHover={1.05}
+                                rotateAmplitude={12}
+                                showMobileWarning={false}
+                                showTooltip={true}
+                                displayOverlayContent={true}
+                                overlayContent={
+                                    <div className="flex flex-col h-full justify-end">
+                                        <h3 className="text-xl font-bold mb-2 text-white">{project.title}</h3>
+                                        <p className="text-gray-300 text-sm mb-3 line-clamp-2">
+                                            {project.description}
+                                        </p>
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {project.tags.slice(0, 3).map((tag, tagIndex) => (
+                                                <span
+                                                    key={tagIndex}
+                                                    className="px-2 py-1 text-xs font-medium rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="flex gap-3">
+                                            <a
+                                                href={project.github}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Github size={18} />
+                                            </a>
+                                            <a
+                                                href={project.demo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 bg-white/10 rounded-full hover:bg-white/20 text-white transition-colors"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <ExternalLink size={18} />
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div className="p-6">
-                                <h3 className="text-xl font-bold mb-2 text-white">{project.title}</h3>
-                                <p className="text-gray-400 text-sm mb-4 line-clamp-3">
-                                    {project.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.tags.map((tag, tagIndex) => (
-                                        <span
-                                            key={tagIndex}
-                                            className="px-3 py-1 text-xs font-medium rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
+                                }
+                            />
                         </div>
                     ))}
                 </div>
@@ -599,6 +801,7 @@ const Projects = () => {
         </section>
     );
 };
+
 
 // ============================================================================
 // INTERESTS SECTION
@@ -632,8 +835,7 @@ const Interests = () => {
 
     return (
         <section id="interests" className="py-20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
-            <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -z-10"></div>
+
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
@@ -685,7 +887,7 @@ const Contact = () => {
                     className={`glass rounded-3xl p-8 md:p-12 lg:p-16 overflow-hidden relative scroll-reveal-scale ${sectionVisible ? 'visible' : ''}`}
                 >
 
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 -z-10"></div>
+
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div className={`scroll-reveal-left ${sectionVisible ? 'visible' : ''} stagger-1`}>
@@ -764,24 +966,40 @@ const Contact = () => {
     );
 };
 
+
 // ============================================================================
 // MAIN PORTFOLIO PAGE
 // ============================================================================
 const Portfolio = () => {
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen relative">
+            {/* Particles Background */}
+            <Particles
+                particleCount={150}
+                particleSpread={12}
+                speed={0.08}
+                particleColors={['#3b82f6', '#8b5cf6', '#60a5fa', '#a78bfa']}
+                moveParticlesOnHover={true}
+                particleHoverFactor={0.5}
+                alphaParticles={true}
+                particleBaseSize={120}
+                sizeRandomness={0.8}
+                cameraDistance={25}
+                disableRotation={false}
+            />
+
             <Navbar />
-            <main>
+            <SideElements />
+            <main className="relative z-10">
                 <Hero />
                 <Education />
                 <Certificates />
                 <Skills />
                 <Projects />
-                <Interests />
                 <Contact />
             </main>
 
-            <footer className="py-8 text-center text-gray-400 text-sm glass border-t border-t-white/5">
+            <footer className="relative z-10 py-8 text-center text-gray-400 text-sm border-t border-t-white/5">
                 <p>© {new Date().getFullYear()} Joshua. Built with React & Tailwind CSS.</p>
             </footer>
         </div>
